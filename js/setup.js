@@ -1,44 +1,23 @@
-var dir, canvas, ctx, width, height, game, me, players = {}, hammer;
-
-/**
- * Thickness of all player lines
- * @type {number}
- */
-var stroke = 4;
-/**
- * Speed in pixels per second
- * @type {number}
- */
-var speed = 100;
-
-/**
- * @enum {number}
- * @readonly
- */
-dir = {
-    up: Hammer.DIRECTION_UP,
-    left: Hammer.DIRECTION_LEFT,
-    right: Hammer.DIRECTION_RIGHT,
-    down: Hammer.DIRECTION_DOWN
-};
-
 document.addEventListener('DOMContentLoaded', setup);
 
 function setup() {
     canvas = document.getElementById('game');
-    ctx = canvas.getContext('2d');
-    width = window.innerWidth;
-    height = window.innerHeight;
 
-    canvas.width = 1000;
-    canvas.height = 1000;
+    canvas.width = settings.gameSize.x;
+    canvas.height = settings.gameSize.y;
+
+    ctx = canvas.getContext('2d');
+
+    ctx.lineWidth = settings.stroke;
 
     // Setup events
     setupEvents();
 
-
     // Init player
+    // TODO: Use color chosen in lobby
     me = new Player('red', dir.down);
+
+    // TODO: Maybe let server decide?
     me.last = [rand(), rand()];
 
     // Init game
@@ -46,10 +25,32 @@ function setup() {
 
     // Start animating
     game.start(function (progress) {
-        drawLine(me, progress * speed);
+        drawLine(me, progress * settings.speed);
 
         // TODO: Draw other players
     });
+}
+
+/**
+ * Setup Hammer events
+ */
+function setupEvents() {
+    hammer = new Hammer(canvas, {
+        recognizers: [
+            [Hammer.Pan, {direction: Hammer.DIRECTION_ALL}],
+            [Hammer.Swipe, {direction: Hammer.DIRECTION_ALL}]
+        ]
+    });
+
+    hammer.on("pan swipe", navigate);
+}
+
+function navigate(event) {
+    if (event.direction !== Hammer.DIRECTION_NONE) {
+        me.setDirection(event.direction);
+    }
+
+    // TODO: Notify server
 }
 
 /**
@@ -62,7 +63,6 @@ function drawLine(player, distance) {
     var pos = player.last,
         direction;
 
-    ctx.lineWidth = stroke;
     ctx.strokeStyle = player.color;
     ctx.beginPath();
     ctx.moveTo(pos[0], pos[1]);
@@ -88,19 +88,4 @@ function rand() {
     return Math.floor(Math.random() * 1001);
 }
 
-function setupEvents() {
-    hammer = new Hammer(canvas, {
-        recognizers: [
-            [Hammer.Pan, {direction: Hammer.DIRECTION_ALL}],
-            [Hammer.Swipe, {direction: Hammer.DIRECTION_ALL}]
-        ]
-    });
 
-    hammer.on("pan swipe", function (ev) {
-
-        // TODO: Prevent move to opposite direction
-        me.direction = ev.direction;
-
-        // TODO: Notify server
-    });
-}
