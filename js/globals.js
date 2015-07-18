@@ -1,11 +1,15 @@
 var dir,
+    oppositeDir,
+    action,
     settings,
     canvas,
     ctx,
     game,
     me,
     players = {},
-    hammer;
+    hammer,
+    socket,
+    room;
 
 /**
  * @enum {number}
@@ -29,6 +33,33 @@ oppositeDir[dir.left] = dir.right;
 oppositeDir[dir.right] = dir.left;
 
 /**
+ * @enum {string}
+ * @readonly
+ */
+action = {
+    /**
+     * List of games that can be joined
+     */
+    list: 'list',
+    /**
+     * Create a new game
+     */
+    create: 'create',
+    /**
+     * Leave a game
+     */
+    leave: 'leave',
+    /**
+     * Join someone else's game
+     */
+    join: 'join',
+    /**
+     * Change direction of player
+     */
+    move: 'move'
+};
+
+/**
  *
  * @type {{stroke: number, speed: number}}
  */
@@ -49,5 +80,10 @@ settings = {
     gameSize: {
         x: 1000,
         y: 1000
-    }
+    },
+
+    /**
+     * The game server
+     */
+    server: 'ws://localhost:8001'
 };

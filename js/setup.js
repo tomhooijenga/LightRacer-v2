@@ -13,15 +13,20 @@ function setup() {
     // Setup events
     setupEvents();
 
-    // Init player
-    // TODO: Use color chosen in lobby
-    me = new Player('red', dir.down);
+    // TODO: must be determined in the lobby page and passed on to game page
+    room = "12345";
 
-    // TODO: Maybe let server decide?
-    me.last = [rand(), rand()];
+    // Setup socket
+    setupSocket();
 
     // Init game
+    // Game can not start until WebSocket is connected
     game = new Game();
+
+    // TODO: Fetch players
+    // Init player
+    me = new Player(1, 'red', dir.down);
+    me.position = [rand(), rand()];
 
     // Start animating
     game.start(function (progress) {
@@ -45,12 +50,27 @@ function setupEvents() {
     hammer.on("pan swipe", navigate);
 }
 
-function navigate(event) {
-    if (event.direction !== Hammer.DIRECTION_NONE) {
-        me.setDirection(event.direction);
-    }
+function setupSocket() {
+    socket = io(settings.server, {
+        path: '/'
+    });
 
-    // TODO: Notify server
+}
+
+/**
+ *
+ * @param event
+ */
+function navigate(event) {
+    if (event.direction !== Hammer.DIRECTION_NONE && event.direction !== me.direction) {
+        if (me.setDirection(event.direction)) {
+            socket.emit(action.move, {
+                player: me.id,
+                room: room,
+                pos: me.position
+            });
+        }
+    }
 }
 
 /**
@@ -60,16 +80,12 @@ function navigate(event) {
  */
 function drawLine(player, distance) {
 
-    var pos = player.last,
-        stroke = settings.stroke,
-        direction;
-
+    var pos = player.position;
 
     ctx.strokeStyle = player.color;
     ctx.beginPath();
 
-    switch (player.getDirection())
-    {
+    switch (player.getDirection()) {
         case dir.up:
             ctx.moveTo(pos[0], pos[1] + 1);
             ctx.lineTo(pos[0], pos[1] - distance - 1);
@@ -102,7 +118,7 @@ function drawLine(player, distance) {
 
     ctx.stroke();
 
-    player.last = pos;
+    player.position = pos;
 }
 
 function rand() {

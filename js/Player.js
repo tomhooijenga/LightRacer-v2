@@ -4,7 +4,7 @@
  * @param dir
  * @constructor
  */
-var Player = function (color, dir) {
+var Player = function (id, color, dir) {
     /**
      * @type {string} Any string that can be parsed as color
      */
@@ -16,20 +16,33 @@ var Player = function (color, dir) {
     this.direction = dir;
 
     /**
-     * @type {*[]} last - The player's last position
+     * @type {*[]} position - The player's position
      */
-    this.last = [0, 0];
+    this.position = [0, 0];
 };
 
+/**
+ *
+ * @returns {number}
+ */
 Player.prototype.getDirection = function () {
     return this.direction;
 };
 
+/**
+ *
+ * @param {number} direction
+ */
 Player.prototype.setDirection = function (direction) {
+
+    // TODO: must move a minimum amount before going back in the opposite direction
+    // ex: go up, go left for 1px, go down => you're in your own line
 
     // Can't go backwards
     if (oppositeDir[direction] !== this.direction)
     {
         this.direction = direction;
+
+        return true;
     }
 };
