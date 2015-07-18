@@ -20,3 +20,16 @@ var Player = function (color, dir) {
      */
     this.last = [0, 0];
 };
+
+Player.prototype.getDirection = function () {
+    return this.direction;
+};
+
+Player.prototype.setDirection = function (direction) {
+
+    // Can't go backwards
+    if (oppositeDir[direction] !== this.direction)
+    {
+        this.direction = direction;
+    }
+};

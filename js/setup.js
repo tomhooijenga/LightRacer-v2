@@ -61,21 +61,44 @@ function navigate(event) {
 function drawLine(player, distance) {
 
     var pos = player.last,
+        stroke = settings.stroke,
         direction;
+
 
     ctx.strokeStyle = player.color;
     ctx.beginPath();
-    ctx.moveTo(pos[0], pos[1]);
 
-    // Up or down is 1, left or right is 0
-    direction = player.direction === dir.up || player.direction === dir.down ? 1 : 0;
+    switch (player.getDirection())
+    {
+        case dir.up:
+            ctx.moveTo(pos[0], pos[1] + 1);
+            ctx.lineTo(pos[0], pos[1] - distance - 1);
 
-    // left and up are negative distance
-    distance = player.direction === dir.up || player.direction === dir.left ? -distance : distance;
+            pos[1] -= distance;
 
-    pos[direction] += distance;
+            break;
+        case dir.down:
+            ctx.moveTo(pos[0], pos[1] - 1);
+            ctx.lineTo(pos[0], pos[1] + distance + 1);
 
-    ctx.lineTo(pos[0], pos[1]);
+            pos[1] += distance;
+
+            break;
+        case dir.left:
+            ctx.moveTo(pos[0] + 1, pos[1]);
+            ctx.lineTo(pos[0] - distance - 1, pos[1]);
+
+            pos[0] -= distance;
+
+            break;
+        case dir.right:
+            ctx.moveTo(pos[0] - 1, pos[1]);
+            ctx.lineTo(pos[0] + distance + 1, pos[1]);
+
+            pos[0] += distance;
+
+            break;
+    }
 
     ctx.stroke();
 
