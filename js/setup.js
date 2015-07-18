@@ -51,10 +51,7 @@ function setupEvents() {
 }
 
 function setupSocket() {
-    socket = io(settings.server, {
-        path: '/'
-    });
-
+    socket = io(settings.server);
 }
 
 /**

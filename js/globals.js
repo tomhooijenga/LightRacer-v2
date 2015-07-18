@@ -85,5 +85,5 @@ settings = {
     /**
      * The game server
      */
-    server: 'ws://localhost:8001'
+    server: 'http://localhost:8001/'
 };
