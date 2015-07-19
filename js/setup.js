@@ -19,20 +19,22 @@ function setup() {
     // Setup socket
     setupSocket();
 
-    // Init game
-    // Game can not start until WebSocket is connected
-    game = new Game();
+    socket.on(action.spawn, function(data) {
+        // Init game
+        // Game can not start until WebSocket is connected
+        game = new Game();
 
-    // TODO: Fetch players
-    // Init player
-    me = new Player(1, 'red', dir.down);
-    me.position = [rand(), rand()];
+        // TODO: Fetch players
+        // Init player
+        me = new Player(data.id, 'red', data.dir);
+        me.position = [data.x, data.y];
 
-    // Start animating
-    game.start(function (progress) {
-        drawLine(me, progress * settings.speed);
+        // Start animating
+        game.start(function (progress) {
+            drawLine(me, progress * settings.speed);
 
-        // TODO: Draw other players
+            // TODO: Draw other players
+        });
     });
 }
 

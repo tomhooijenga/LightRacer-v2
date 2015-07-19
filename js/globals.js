@@ -56,7 +56,11 @@ action = {
     /**
      * Change direction of player
      */
-    move: 'move'
+    move: 'move',
+    /**
+     * Spawn the player
+     */
+    spawn: 'spawn'
 };
 
 /**
@@ -85,5 +89,5 @@ settings = {
     /**
      * The game server
      */
-    server: 'http://localhost:8001/'
+    server: 'http://nhum.nl:8001/'
 };

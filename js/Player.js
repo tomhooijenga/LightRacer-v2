@@ -6,6 +6,10 @@
  */
 var Player = function (id, color, dir) {
     /**
+     * @type {number} The player's id
+     */
+    this.id = id;
+    /**
      * @type {string} Any string that can be parsed as color
      */
     this.color = color;
