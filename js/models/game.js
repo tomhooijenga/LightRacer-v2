@@ -2,7 +2,13 @@
  *
  * @constructor
  */
-var Game = function () {
+var Game = function (ctx) {
+
+    /**
+     *
+     */
+    this.ctx = ctx;
+
     /**
      * The current frame
      * @type {null|number}
@@ -39,4 +45,10 @@ Game.prototype.start = function (callback) {
  */
 Game.prototype.stop = function () {
     window.cancelAnimationFrame(this.frame);
+};
+
+Game.prototype.spawn = function (player) {
+    this.ctx.fillStyle = player.color;
+
+    this.ctx.fillRect(player.position[0], player.position[1], settings.stroke, settings.stroke);
 };

@@ -11,14 +11,23 @@ var connection = {
         {
             this.socket.emit('list');
         }
-
-        ui.list(lobbies);
+        else
+        {
+            ui.list(lobbies);
+        }
     },
     /**
      * Create a new game
      */
-    create: function () {
-
+    create: function (created) {
+        if (!created)
+        {
+            this.socket.emit('create');
+        }
+        else
+        {
+            ui.join();
+        }
     },
     /**
      * Leave a game
@@ -29,19 +38,43 @@ var connection = {
     /**
      * Join someone else's game
      */
-    join: function () {
-
-    },
+    join: function (lobbyId) {
+        if (lobbyId === true)
+        {
+            ui.join();
+        }
+        else
+        {
+            this.socket.emit('join', lobbyId);
+        }
+    }
+    ,
     /**
      * Change direction of player
      */
-    move: function () {
-
+    move: function (data) {
+        this.socket.emit('move', data);
     },
     /**
      * Spawn the player
      */
-    spawn: function () {
+    spawn: function (data) {
+        if (data)
+        {
+            // TODO: Let players choose color
 
+            if (!players[data.playerId])
+            {
+                players[data.playerId] = new Player(data.playerId, data.color, data.dir);
+
+                players[data.playerId].position = [data.x, data.y];
+
+                game.spawn(players[data.playerId]);
+            }
+        }
+        else
+        {
+            this.socket.emit('spawn')
+        }
     }
 };

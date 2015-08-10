@@ -1,6 +1,4 @@
-var canvas,
-    ctx,
-
+var game,
     /**
      * @enum {number}
      * @readonly
@@ -82,4 +80,9 @@ var canvas,
          */
         //server: 'http://nhum.nl:8001/'
         server: 'http://localhost:8001'
-    };
+    },
+    /**
+     *
+     * @type {{}}
+     */
+    players = {};
