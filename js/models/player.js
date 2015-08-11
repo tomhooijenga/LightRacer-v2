@@ -1,5 +1,6 @@
 /**
  *
+ * @param id
  * @param color
  * @param dir
  * @constructor
@@ -35,9 +36,20 @@ Player.prototype.getDirection = function () {
 
 /**
  *
- * @param {number} direction
+ * @param direction
+ * @returns {boolean}
  */
 Player.prototype.setDirection = function (direction) {
+
+    if (direction === Hammer.DIRECTION_NONE)
+    {
+        return false;
+    }
+
+    if (direction === this.direction)
+    {
+        return false;
+    }
 
     // TODO: must move a minimum amount before going back in the opposite direction
     // ex: go up, go left for 1px, go down => you're in your own line

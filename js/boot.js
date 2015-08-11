@@ -21,21 +21,17 @@ for (var act in action)
 window.addEventListener('DOMContentLoaded', function () {
     ui.lobby = document.getElementById('lobby');
     ui.listEl = document.querySelector('#lobby ul');
+    ui.create = document.getElementById('create');
+    ui.refresh = document.getElementById('refresh');
+
     var canvas = ui.canvas = document.getElementById('game');
 
     canvas.width = settings.gameSize.x;
     canvas.height = settings.gameSize.y;
 
-    ui.listEl.addEventListener('click', function (e) {
-        if (e.target.nodeName === 'BUTTON')
-        {
-            connection.join(e.target.value);
-        }
-    });
+    ui.setupButtons();
 
-    document.getElementById('create').addEventListener('click', function () {
-        connection.create();
-    });
+    ui.setupTouch();
 
     game = new Game(ui.canvas.getContext('2d'));
 

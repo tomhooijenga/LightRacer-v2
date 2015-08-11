@@ -1,8 +1,10 @@
 var ui = {
     canvas: null,
+    create: null,
+    refresh: null,
     lobby: null,
     listEl: null,
-    listTemplate: "<li>{{players}} <button value=\"{{lobbyId}}\">Join</button></li>",
+    listTemplate: "<li>{{players}} / 4 <button value=\"{{lobbyId}}\">Join</button></li>",
     list: function (lobbies) {
         var html = [];
 
@@ -32,5 +34,37 @@ var ui = {
     },
     toggle: function (el) {
         el.classList.toggle('hide');
+    },
+    setupButtons: function () {
+        ui.listEl.addEventListener('click', function (e) {
+            if (e.target.nodeName === 'BUTTON')
+            {
+                connection.join(e.target.value);
+            }
+        });
+
+        ui.create.addEventListener('click', function () {
+            connection.create();
+        });
+
+        ui.refresh.addEventListener('click', function () {
+            connection.list();
+        });
+    },
+    setupTouch: function () {
+        var hammer = new Hammer(ui.canvas, {
+            recognizers: [
+                [Hammer.Pan, {direction: Hammer.DIRECTION_ALL}],
+                [Hammer.Swipe, {direction: Hammer.DIRECTION_ALL}]
+            ]
+        });
+
+        hammer.on("pan swipe", function () {
+            if (me.setDirection(event.direction)) {
+                socket.emit(action.move, {
+                    pos: players[player].position
+                });
+            }
+        });
     }
 };
