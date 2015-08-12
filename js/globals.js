@@ -83,6 +83,11 @@ var game,
     },
     /**
      *
+     * @type {Player}
+     */
+    player = null,
+    /**
+     *
      * @type {{}}
      */
     players = {};

@@ -12,7 +12,7 @@ var ui = {
         {
             if (lobby === null) return;
 
-            var template = ui.listTemplate.replace('{{players}}', lobby.players.length);
+            var template = ui.listTemplate.replace('{{players}}', lobby.players);
             template = template.replace('{{lobbyId}}', lobby.id);
 
             html.push(template);
@@ -29,6 +29,7 @@ var ui = {
     join: function () {
         ui.toggle(ui.lobby);
         ui.toggle(ui.canvas);
+        ui.toggle(ui.ready);
 
         connection.spawn();
     },
@@ -50,6 +51,12 @@ var ui = {
         ui.refresh.addEventListener('click', function () {
             connection.list();
         });
+
+        ui.ready.addEventListener('click', function () {
+            connection.ready();
+
+            ui.toggle(ui.ready);
+        });
     },
     setupTouch: function () {
         var hammer = new Hammer(ui.canvas, {
@@ -60,7 +67,7 @@ var ui = {
         });
 
         hammer.on("pan swipe", function () {
-            if (me.setDirection(event.direction)) {
+            if (players[player].setDirection(event.direction)) {
                 socket.emit(action.move, {
                     pos: players[player].position
                 });

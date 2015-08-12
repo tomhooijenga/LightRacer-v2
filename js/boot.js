@@ -23,6 +23,7 @@ window.addEventListener('DOMContentLoaded', function () {
     ui.listEl = document.querySelector('#lobby ul');
     ui.create = document.getElementById('create');
     ui.refresh = document.getElementById('refresh');
+    ui.ready = document.getElementById('ready');
 
     var canvas = ui.canvas = document.getElementById('game');
 

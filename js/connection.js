@@ -39,6 +39,7 @@ var connection = {
      * Join someone else's game
      */
     join: function (lobbyId) {
+        console.log(arguments);
         if (lobbyId === true)
         {
             ui.join();
@@ -47,13 +48,32 @@ var connection = {
         {
             this.socket.emit('join', lobbyId);
         }
-    }
-    ,
+    },
+    ready: function (spawn, playerId)
+    {
+        if (playerId)
+        {
+            player = playerId;
+        }
+
+        this.socket.emit('ready');
+    },
     /**
-     * Change direction of player
+     * Move the player to a new point
      */
     move: function (data) {
-        this.socket.emit('move', data);
+        console.log(data);
+    },
+    turn: function (data, send)
+    {
+        if (send)
+        {
+            this.socket.emit('turn', data);
+        }
+        else
+        {
+            players[data.playerId].setDirection(data.direction);
+        }
     },
     /**
      * Spawn the player
@@ -62,7 +82,6 @@ var connection = {
         if (data)
         {
             // TODO: Let players choose color
-
             if (!players[data.playerId])
             {
                 players[data.playerId] = new Player(data.playerId, data.color, data.dir);
